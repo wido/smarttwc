@@ -1,10 +1,9 @@
-# smarthpwc
-Smart (Tesla) charging with a EU HPWC in combination with a Dutch Smart Meter.
+# smarttwc
+Smart (Tesla) charging with a (EU) Tesla Wall Connector (TWC) using Python 3 code
 
 # How does it work?
-SmartHPWC connects to a Dutch Smart Meter (DSMR) and reads the current energy consumption of the grid connection.
-
-Based on this information it tells the HPWC (in slave mode) how much current it's allowed to advertise to the connected car.
+SmartTWC is able to run in *Master* mode for a Tesla Wall Connector and by sending it messages over RS-485 it can
+adjust the maximum allowed current the TWC will advertise to the car.
 
 # TWCManager
 A lot of credits go to [TWCManager](https://github.com/cdragon/TWCManager) for figuring out the protocol of the Tesla HPWC.
