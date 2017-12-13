@@ -35,6 +35,9 @@ class Master(threading.Thread):
                 slave = Slave(slave_id=1, max_current=self.max_current)
                 self.slaves.append(slave)
 
+            for slave in self.slaves:
+                fakemaster.send_max_current(slave)
+
             self.event.wait(self.interval)
 
     def join(self, timeout=None):

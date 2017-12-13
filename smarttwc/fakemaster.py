@@ -31,3 +31,8 @@ class FakeMaster:
 
     def send_master_linkready2(self):
         self.device.write(Messages.LINK_READY_2.value.encode())
+
+    def send_max_current(self, slave):
+        logging.debug('Advertising maximum current %d to slave %s',
+                      slave.max_current, slave.slave_id)
+        return True
