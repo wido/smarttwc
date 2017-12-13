@@ -12,12 +12,12 @@ class FakeMaster:
         num_init_msg = 10
         while True:
             if num_init_msg > 5:
-                logging.info('Sending linkready1')
+                logging.debug('Sending linkready1')
                 self.send_master_linkready1()
                 time.sleep(0.1)
                 num_init_msg -= 1
             elif num_init_msg > 0:
-                logging.info('Sending linkready2')
+                logging.debug('Sending linkready2')
                 self.send_master_linkready2()
                 time.sleep(0.1)
                 num_init_msg -= 1
