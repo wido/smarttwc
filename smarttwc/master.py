@@ -32,7 +32,7 @@ class Master(threading.Thread):
             logging.debug('Reading data from bus')
             data = self.dev.read(16)
             if data and len(data) == 16:
-                slave = Slave()
+                slave = Slave(slave_id=1, max_current=self.max_current)
                 self.slaves.append(slave)
 
             self.event.wait(self.interval)
