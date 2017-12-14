@@ -2,7 +2,7 @@
 import logging
 import argparse
 from threading import Event
-from smarttwc import Master
+from smarttwc import TWCManager
 
 parser = argparse.ArgumentParser(description='SmartTWC')
 parser.add_argument("--debug", action="store_true", dest="debug",
@@ -42,7 +42,7 @@ else:
 logging.info('Serial Device: %s Baud Rate: %d Max Current: %d',
             serial_device, serial_baud_rate, max_current)
 
-master = Master(serial_device, serial_baud_rate, max_current)
+master = TWCManager(serial_device, serial_baud_rate, max_current)
 master.daemon = True
 master.start()
 

@@ -1,3 +1,3 @@
-from .master import Master
+from .twcmanager import TWCManager
 from .fakemaster import FakeMaster
 from .slave import Slave

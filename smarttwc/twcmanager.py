@@ -5,14 +5,14 @@ from .fakemaster import FakeMaster
 from. slave import Slave
 
 
-class Master(threading.Thread):
+class TWCManager(threading.Thread):
     alive = True
     interval = 0.1
     initialized = False
     slaves = list()
 
     def __init__(self, serial_device, serial_baud_rate, max_current):
-        super(Master, self).__init__()
+        super(TWCManager, self).__init__()
         self.event = threading.Event()
         self.alive = True
         self.serial_device = serial_device
@@ -43,4 +43,4 @@ class Master(threading.Thread):
     def join(self, timeout=None):
         self.alive = False
         self.dev.close()
-        super(Master, self).join(timeout)
+        super(TWCManager, self).join(timeout)
