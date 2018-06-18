@@ -4,8 +4,9 @@ import logging
 
 
 class FakeMaster:
-    def __init__(self, device, max_current=10):
+    def __init__(self, device, twcd_id, max_current=10):
         self.device = device
+        self.twc_id = twcd_id
         self.max_current = max_current
 
     def init_master(self):
@@ -27,10 +28,12 @@ class FakeMaster:
         return True
 
     def send_master_linkready1(self):
-        self.device.write(Messages.LINK_READY_1.value.encode())
+        msg = bytearray(b'\xFC\xE1') + Messages.FAKE_TW_CID.value + Messages.MASTER_SIGN.value + bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00')
+        self.device.write(msg)
 
     def send_master_linkready2(self):
-        self.device.write(Messages.LINK_READY_2.value.encode())
+        msg = bytearray(b'\xFB\xE2') + Messages.FAKE_TW_CID.value + Messages.MASTER_SIGN.value + bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00')
+        self.device.write(msg)
 
     def send_max_current(self, slave):
         logging.debug('Advertising maximum current %d to slave %s',
