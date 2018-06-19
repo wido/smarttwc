@@ -5,6 +5,7 @@ from .fakemaster import FakeMaster
 from. slave import SlaveList
 from .serial import Device
 from .serial.messages import Messages
+from .tools import hex_str
 
 
 class TWCManager(threading.Thread):
@@ -31,7 +32,7 @@ class TWCManager(threading.Thread):
             if msg == 0:
                 continue
 
-            logging.debug('len=%d msg=%s ', len(msg), msg)
+            logging.debug('len=%d msg=%s ', len(msg), hex_str(msg))
 
             if len(msg) > 0:
                 match = re.search(Messages.MESSAGE_MATCH.value, msg, re.DOTALL)
@@ -39,7 +40,8 @@ class TWCManager(threading.Thread):
                     sender_id = match.group(1)
                     max_current = ((match.group(3)[0] << 8) + match.group(3)[1]) / 100
                     logging.debug('slave=%s max_current=%d', sender_id, max_current)
-                    self.slaves.add_slave(sender_id, max_current)
+                    slave = self.slaves.add(sender_id, max_current)
+                    logging.debug(slave)
 
             logging.info('We currently have %d slaves', len(self.slaves))
             self.event.wait(self.interval)

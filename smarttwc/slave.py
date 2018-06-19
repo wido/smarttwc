@@ -1,4 +1,5 @@
 import time
+from smarttwc.tools import hex_str
 
 
 class SlaveList:
@@ -8,16 +9,19 @@ class SlaveList:
     def contains(self, slave_id):
         slave = [x for x in self.slaves if x.slave_id == slave_id]
 
-        return slave
+        if len(slave) > 0:
+            return slave[0]
 
-    def add_slave(self, slave_id, max_current):
+    def add(self, slave_id, max_current):
         slave = self.contains(slave_id)
 
         if not slave:
             slave = Slave(slave_id, max_current)
             self.slaves.append(slave)
 
-    def remove_slave(self, slave_id):
+        return slave
+
+    def remove(self, slave_id):
         slave = self.contains(slave_id)
         if slave:
             self.slaves.remove(slave)
@@ -38,4 +42,8 @@ class Slave:
 
     def ping(self):
         self.heartbeat = time.time()
+
+    def __str__(self):
+        return 'slave_id={0} max_current={1}'.format(hex_str(self.slave_id),
+                                                     self.max_current)
 

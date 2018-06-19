@@ -2,13 +2,10 @@ import serial
 import logging
 import time
 import threading
+from smarttwc.tools import hex_str
 
 
 class Device:
-    @staticmethod
-    def hex_str(ba: bytearray):
-        return ' '.join('{:02X}'.format(c) for c in ba)
-
     @staticmethod
     def unescape_msg(msg: bytearray, msgLen):
         msg = msg[0:msgLen]
@@ -55,60 +52,39 @@ class Device:
                 i = i + 1
             i = i + 1
 
-        logging.debug('TX: %s', self.hex_str(msg))
+        logging.debug('TX: %s', hex_str(msg))
         self.dev.write(msg)
 
     def read(self, size):
         msg = self.dev.read(size)
-        logging.debug('RX: %s', self.hex_str(msg))
+        logging.debug('RX: %s', hex_str(msg))
         return msg
 
-    def in_waiting(self):
-        data_len = self.dev.in_waiting
-        logging.debug('Waiting: %d', data_len)
-        return data_len
-
     def read_msg(self):
-        ignored_data = bytearray()
-        msg_len = 0
         msg = bytearray()
 
         while True:
-            logging.debug('Reading data from bus')
             now = time.time()
-            data_len = self.in_waiting()
-            if data_len == 0:
-                if msg_len == 0:
-                    break
-                else:
+            waiting = self.dev.in_waiting
+            if waiting == 0:
+                if len(msg) == 0:
                     if (now - self.msg_rx_start) >= 2.0:
                         break
 
                     self.event.wait(0.025)
                     continue
             else:
-                data_len = 1
-                data = self.dev.read(data_len)
+                data = self.dev.read(1)
 
-            if data_len != 1:
-                logging.error('No data available')
-                break
-
-            if msg_len == 0 and data[0] != 0xc0:
-                ignored_data += data
+            if len(msg) == 0 and data[0] != 0xc0:
                 continue
-            elif 0 < msg_len < 15 and data[0] == 0xc0:
+            elif 0 < len(msg) < 15 and data[0] == 0xc0:
                 msg = data
-                msg_len = 1
                 continue
-
-            if msg_len == 0:
-                msg = bytearray()
 
             msg += data
-            msg_len += 1
 
-            if msg_len >= 16 and data[0] == 0xc0:
+            if len(msg) >= 16 and data[0] == 0xc0:
                 break
 
         return msg
