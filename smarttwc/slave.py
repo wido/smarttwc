@@ -1,5 +1,5 @@
 import time
-from smarttwc.tools import hex_str
+from smarttwc.tools import slave_id_str
 
 
 class SlaveList:
@@ -44,6 +44,6 @@ class Slave:
         self.heartbeat = time.time()
 
     def __str__(self):
-        return 'slave_id={0} max_current={1}'.format(hex_str(self.slave_id),
+        return 'slave_id={0} max_current={1}'.format(slave_id_str(self.slave_id),
                                                      self.max_current)
 

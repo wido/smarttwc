@@ -32,8 +32,6 @@ class TWCManager(threading.Thread):
             if msg == 0:
                 continue
 
-            logging.debug('len=%d msg=%s ', len(msg), hex_str(msg))
-
             if len(msg) > 0:
                 match = re.search(Messages.MESSAGE_MATCH.value, msg, re.DOTALL)
                 if match:

@@ -34,6 +34,18 @@ class Device:
         msg.append(checksum & 0xFF)
         return msg
 
+    @staticmethod
+    def calc_checksum(msg):
+        expected = msg[len(msg) - 1]
+        checksum = 0
+        for i in range(1, len(msg) - 1):
+            checksum += msg[i]
+
+        if (checksum & 0xFF) != expected:
+            return True
+
+        return False
+
     def __init__(self, device, baud_rate, timeout=0):
         self.msg_rx_start = time.time()
         self.event = threading.Event()
@@ -85,7 +97,18 @@ class Device:
             msg += data
 
             if len(msg) >= 16 and data[0] == 0xc0:
-                break
+                logging.debug('RX: %s', hex_str(msg))
+                if self.calc_checksum(msg):
+                    break
+                else:
+                    logging.debug('Ignoring message due to failed checksum')
+                    msg = bytearray()
+                    continue
+
+            if len(msg) > 32:
+                self.dev.reset_input_buffer()
+                msg = bytearray()
+                continue
 
         return msg
 
